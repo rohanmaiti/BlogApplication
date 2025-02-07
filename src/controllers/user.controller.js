@@ -6,11 +6,9 @@ async function handleSignupPost(req,res){
         const {name, email, password} = req.body;
         const salt = await bcrypt.genSaltSync(10);
         const hash = await bcrypt.hashSync(password, salt)
-        const user = await User.create({
-            name:name,
-            email:email,
-            password:hash
-        })
+        const user = new User({name:name , email: email, password:hash})
+        await user.save();
+        req.session.user = user;
         res.redirect("/home");
     } catch (error) {
         console.log(error.message);
@@ -18,8 +16,17 @@ async function handleSignupPost(req,res){
     }
    
 }
- function handleLoginPost(req,res){
-    res.send("signup controller")
+ async function handleLoginPost(req,res){
+    const {email, password} = req.body;
+    const user = await User.findOne({email:email})
+    const isMatch = await bcrypt.compareSync(password,user.password);
+    if(isMatch){
+        req.session.user = user;
+        res.redirect("/home");
+    }
+    else{
+        res.send(`<script>alert("Wrong Password"); window.location.href="/user/login"</script>`);
+    }
 }
 
  function handleLoginGet(req,res){

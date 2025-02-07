@@ -1,9 +1,6 @@
 <div style="width: 30%; margin: auto; display: flex; flex-direction: column; justify-content: center; align-items: center; border:1px solid rgb(24, 61, 117); margin-top: 5%; padding: 2rem; border-radius: 1rem;" data-bs-theme="dark" >
-    <h1 style="padding-bottom: 2rem; color:blue" >Signup</h1>
-<form method="post"  action="/user/signup" >
-    <div class="input-text mb-3">
-        <input type="text" class="form-control" placeholder="Enter your Name" name="name" aria-label="fullname" aria-describedby="inputGroup-sizing-default" required >
-      </div>
+    <h1 style="padding-bottom: 2rem; color:blue" >Login</h1>
+<form method="post"  action="/user/login">
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Email address</label>
       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" required>
@@ -14,7 +11,7 @@
       <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
     </div>
     <div style="display: flex; justify-content: center;" >
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" >Login</button>
     </div>
     
 </form>

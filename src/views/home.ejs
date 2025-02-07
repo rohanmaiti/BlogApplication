@@ -6,9 +6,18 @@
     <title>Document</title>
     <link rel="stylesheet" href="">
     <%- include("./partials/head")  %>
+    <style>
+        body{
+            background-color:rgb(31, 31, 33);  
+            color: white;
+        }
+    </style>
 </head>
 <body>
    <%- include("./partials/navbar") %>
+   <br> <br> <br> <br>
+   <h1><%= user.name%></h1>
+
     <%- include("./partials/script") %>
 </body>
 </html>
