@@ -50,10 +50,16 @@ async function handleUpdateBlogPost(req,res){
     
 }
 
+async function handleAllBlogsGet(req,res){
+    const blogs = await Blog.find({});
+    res.json({blogs:blogs});
+}
+
 module.exports = {
     handleCreateBlogGet, 
     handleCreateBlogPost,
     handleYourBlogsGet,
     handleMyBlogsGet,
-    handleUpdateBlogPost
+    handleUpdateBlogPost,
+    handleAllBlogsGet
 }
