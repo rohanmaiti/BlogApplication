@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Blogs</title>
+    <%- include("./partials/head")  %>
+    <style>
+          body{
+            background-color:rgb(31, 31, 33);  
+            color: white;
+            /* color:#888 */
+        }
+        .container {
+    overflow-y: auto;  /* Enables vertical scrollbar */
+    overflow-x: hidden; /* Hides horizontal scrollbar */
+    scrollbar-width: thin;  /* Firefox: Makes scrollbar thinner */
+    scrollbar-color: #e0e0e0 #484848;  /* Firefox: Thumb and Track color */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* WebKit Browsers (Chrome, Edge, Safari) */
+.container::-webkit-scrollbar {
+    width: 8px; /* Thin vertical scrollbar */
+}
+
+.container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Light background for track */
+    border-radius: 10px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: #888; /* Scrollbar color */
+    border-radius: 10px;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker on hover */
+}
+
+
+.btn{
+background-color: rgb(15, 126, 117);
+color: #f1f1f1;
+}
+.btn:hover{
+background-color: blue;
+}
+
+
+.custom-textarea {
+    min-height: 300px !important;  /* Increase height */
+    font-size: 16px !important;  /* Increase font size */
+    padding: 10px !important;  /* Add padding */
+}
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <%- include("./partials/navbar") %>
+    <div style="overflow: scroll;   background-color:rgb(59, 59, 60);  ; height: 90vh; border-radius: 5px; padding-top:20px;" class="container">
+
+    </div>
+    <%- include("./partials/script") %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        fetch("/user/blog/myBlogs")
+        .then(res=>res.json())
+        .then(blogs=>{
+            console.log(blogs);
+            blogs.blogs.forEach(blog=>{
+                createBlogDiv(blog);
+            })
+        })
+
+            function createBlogDiv(blog){
+            console.log(blog);
+            let div1 = document.createElement("div");
+            let div2 = document.createElement("div");
+            let div3 = document.createElement("div");
+            let div4 = document.createElement("div");
+            let h1  =  document.createElement("h1");
+            h1.innerText = blog.title;
+            div1.append(h1);
+
+            let p = document.createElement("p");
+            p.innerText = blog.text;
+            console.log(p);
+            div2.append(p);
+            console.log(div2);
+
+            let button1 = document.createElement("button");
+            button1.setAttribute("class", "btn");
+            button1.innerText = "Comments";
+            let button2 = document.createElement("button");
+            button2.setAttribute("class", "btn");
+            button2.innerText = "Edit"
+            div3.append(button1,button2);
+
+            console.log(div3);
+
+            div4.append(div1);
+            div4.append(div2);
+            div4.append(div3);
+            button1.style = "border:none; border-radius:3px; padding:5px; padding-left:10px;padding-right:10px; hover:background-color:red;"
+            button2.style = "border:none; border-radius:3px; padding:5px; padding-left:10px;padding-right:10px;"
+
+            div1.style = "border-bottom:1px solid #999; color:black;"
+            div2.style = "padding:20px;color:black;"
+            div3.style = "display:flex; gap:15px;padding:10px;"
+            div4.style = "box-shadow:1px 1px 3px grey;  display:flex; flex-direction:column; padding:10px; background-color:grey; border-radius:4px;"
+            document.querySelector(".container").appendChild(div4);
+            console.log(div4);
+
+            button2.addEventListener("click",async ()=>{
+                console.log("ghgh")
+                const x = await Swal.fire({
+                  input: "textarea",
+                  inputLabel: "Message",
+                  inputPlaceholder: "Type your message here...",
+                  inputValue:p.innerText,
+                  inputAttributes: {
+                    "aria-label": "Type your message here"
+                  },
+                  showCancelButton: true,
+                  confirmButtonText: "Update",
+                  customClass: {
+                    input: "custom-textarea" // Apply custom class
+                  }
+                }).then(result=>{
+                    if(result.isConfirmed){
+                        if(p.innerText == result.value.trim()){
+                            Swal.fire({
+                              title: "Nothig to be updated",
+                              text: "add or detele text to update",
+                              icon: "question"
+                            });
+                            return;
+                        }
+                        // update the text
+                        console.log("updated text", result.value);
+                        const updatedText = {
+                            text : result.value.trim(),
+                            id:blog._id
+                        }
+                        fetch("/user/blog/updateBlog",{
+                            method:"POST",
+                            headers:{
+                                "Content-Type":"application/json"
+                            },
+                            body:JSON.stringify(updatedText)
+                        })
+                        .then(res=>{
+                            Swal.fire({
+                              title: "Successfully updated!",
+                              icon: "success",
+                              draggable: true
+                            }).then(()=>{
+                                p.innerText = result.value;
+                            })
+                        }).catch(err=>{
+                            Swal.fire({
+                              title: "Error in updating!",
+                              icon: "error",
+                              draggable: true
+                            });
+                        })
+                        
+                    }
+                })
+            })
+
+        }
+    </script>
+</body>
+</html>

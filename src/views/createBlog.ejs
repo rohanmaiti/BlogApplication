@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Blog</title>
+    <%- include("./partials/head")  %>
+    <style>
+        body{
+            background-color:rgb(212, 212, 212);  
+            color: rgb(97, 97, 97);
+        }
+    </style>
+</head>
+<body>
+    <%- include("./partials/navbar") %>
+    <div class="container">
+        <div style="margin: 20px;;" >
+            <h3>Create your Blog and share to the World !</h3>
+        </div>
+        <div style="margin: 20px;;" class="form-floating mb-3">
+            <input type="text" class="form-control" id="title" placeholder="Enter the Title">
+            <label for="floatingInput">Enter Title</label>
+        </div>
+        <div style="margin: 20px;;" class="form-floating">
+            <textarea class="form-control" placeholder="Write your blog" id="text" style="height: 400px"></textarea>
+            <label for="floatingTextarea2">Start Writing</label>
+        </div>
+        <div style="display:flex; justify-content: center;" >
+            <button id="btn" type="button" class="btn btn-outline-primary">Post your blog</button>
+        </div>
+    </div>
+   
+    <%- include("./partials/script") %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.querySelector("#btn").addEventListener("click",()=>{
+            const title = document.querySelector("#title").value.trim();
+            const text  = document.querySelector("#text").value.trim();
+            if(title == '' || text == ''){
+                Swal.fire({
+                  title: 'warning!',
+                  text: 'Title or Text is missing',
+                  icon: 'warning',
+                  confirmButtonText: 'got it'
+                })
+                return;
+            }
+            else{
+                let blog = {
+                    title : title,
+                    text : text
+                }
+                console.log("hii")
+                fetch("/user/blog/createBlog",{
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify(blog)
+                })
+                .then(res=>res.json())
+                .then(res=>{
+                    Swal.fire({
+                      title: `${res.message}`,
+                      icon: "success",
+                      draggable: true
+                    });
+                    document.querySelector("#title").value = '';  
+                    document.querySelector("#text").value = '';
+                })
+                .catch(err=>{
+                    Swal.fire({
+                      title: "Error in Uploading Blog",
+                      text: `something went wrong`,
+                      icon: "error"
+                    });
+                })
+            }
+            
+        })
+    </script>
+</body>
+</html>

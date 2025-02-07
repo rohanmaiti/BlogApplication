@@ -15,10 +15,13 @@ console.log("connected to DB");
 .catch(err=>{
     console.log("Error connecting DB")
 })
-const userRoutes = require("./routes/user.router");
+
+// const Blogs = require("./models/blog.model.js")
+
 
 app.use(express.json());
 app.use(express.urlencoded());
+
 app.use(session({
     secret: "secret",
     resave: false,               // Prevents resaving unmodified sessions
@@ -32,10 +35,16 @@ app.set("views", path.resolve("./src/views"));
 app.get("/",userAuth,(req,res)=>{
     res.render("home",{user : req.session.user});
 })
-
-app.use("/user",userRoutes);
 app.get("/home",userAuth,(req,res)=>{
     res.render("home",{user:req.session.user});
 })
+
+const userRoutes = require("./routes/user.router");
+const blogRoutes = require("./routes/blog.router.js");
+app.use("/user/blog",blogRoutes);
+app.use("/user",userRoutes);
+
+
+
 
 
