@@ -6,8 +6,8 @@ function handleCreateBlogGet(req,res){
 
 async function handleCreateBlogPost(req,res){
     try {
-        console.log(req.body);
-        console.log( req.session.user.email);
+        // console.log(req.body);
+        // console.log( req.session.user.email);
        
         const {text, title} = req.body;
         await Blog.create({
@@ -42,7 +42,7 @@ async function handleUpdateBlogPost(req,res){
         if (!updatedBlog) {
             return res.status(404).json({ message: "Blog not found" });
         }
-        console.log(updatedBlog);
+        // console.log(updatedBlog);
         res.status(200).json({ message: "Blog updated successfully", updatedBlog });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
@@ -55,11 +55,22 @@ async function handleAllBlogsGet(req,res){
     res.json({blogs:blogs});
 }
 
+async function handleAddCommentPost(req,res){
+    const {name, comment, id} = req.body;
+    // console.log(id);
+    const blog = await Blog.findById(id);
+    // console.log(blog);
+    blog.comments.push({ name, comment });
+    await blog.save();
+    res.status(200).json({ message: "Comment added successfully", blog });
+}
+
 module.exports = {
     handleCreateBlogGet, 
     handleCreateBlogPost,
     handleYourBlogsGet,
     handleMyBlogsGet,
     handleUpdateBlogPost,
-    handleAllBlogsGet
+    handleAllBlogsGet,
+    handleAddCommentPost
 }
