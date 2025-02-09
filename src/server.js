@@ -16,12 +16,11 @@ console.log("connected to DB");
     console.log("Error connecting DB")
 })
 
-// const Blogs = require("./models/blog.model.js")
-
-
+// this will parse req.body 
 app.use(express.json());
 app.use(express.urlencoded());
 
+// initialising session 
 app.use(session({
     secret: "secret",
     resave: false,               // Prevents resaving unmodified sessions
