@@ -5,10 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Blog</title>
     <%- include("./partials/head")  %>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <style>
         body{
             background-color:rgb(212, 212, 212);  
             color: rgb(97, 97, 97);
+        }
+        #editor {
+        height: 400px; /* Change this value as needed */
+        /* border: 1px solid black; */
+        }
+        .ql-container {
+        min-height: 400px; /* Ensures the editor body is tall */
+        /* border: 1px solid black; */
+        }
+        .ql-editor { 
+        font-family: "Arial", sans-serif;
+        font-size: 18px;
+        color: #ffffff;  /* Text color */
+        background: #1e1e1e; /* Dark mode */
+        padding: 15px; /* Add spacing inside */
+        border-radius: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        }
+        .ql-toolbar button{
+        font-size: 16px;  /* Increase icon size */
+        color: #ffffff;  /* Change color */
+        }
+        .ql-toolbar button:hover {
+        color: #ff914d; /* Change hover color */
+        }
+        .ql-toolbar {
+        border: none;
+        background: #808592;
+        }
+        .ql-editor ::selection {
+        background: #ff914d;
+        color: #fff;
+        }
+        .ql-editor:focus {
+        outline: none;
         }
     </style>
 </head>
@@ -23,20 +60,41 @@
             <label for="floatingInput">Enter Title</label>
         </div>
         <div style="margin: 20px;;" class="form-floating">
-            <textarea class="form-control" placeholder="Write your blog" id="text" style="height: 400px"></textarea>
-            <label for="floatingTextarea2">Start Writing</label>
+            <!-- <textarea class="form-control" placeholder="Write your blog" id="text" style="height: 400px"></textarea>
+            <label for="floatingTextarea2">Start Writing</label> -->
+            <div id="editor">
+                <p>Write your Blog here...</p>
+                <!-- <p>Some initial <strong>bold</strong> text</p> -->
+                <p><br /></p>
+            </div>
+            <div style="display:flex; justify-content: center;" >
+                <button id="btn" type="button" class="btn btn-outline-primary">Post your blog</button>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+            <!-- Initialize Quill editor -->
+            <script>
+                // const quill = new Quill('#editor', {
+                //   theme: 'snow'
+                // });
+            </script>
         </div>
-        <div style="display:flex; justify-content: center;" >
-            <button id="btn" type="button" class="btn btn-outline-primary">Post your blog</button>
-        </div>
+        
     </div>
    
     <%- include("./partials/script") %>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Initialize Quill editor start here
+        const quill = new Quill('#editor', {
+                  theme: 'snow'
+        });
+        // Initialize Quill editor ends here
+
         document.querySelector("#btn").addEventListener("click",()=>{
             const title = document.querySelector("#title").value.trim();
-            const text  = document.querySelector("#text").value.trim();
+            const text  = quill.getText();
+            console.log("text = ",text);
             if(title == '' || text == ''){
                 Swal.fire({
                   title: 'warning!',
@@ -66,14 +124,17 @@
                       draggable: true
                     });
                     document.querySelector("#title").value = '';  
-                    document.querySelector("#text").value = '';
+                    quill.setText(''); // emptying the quill editor
+                    return;
                 })
                 .catch(err=>{
+                    console.log(err);
                     Swal.fire({
                       title: "Error in Uploading Blog",
                       text: `something went wrong`,
                       icon: "error"
                     });
+                    return;
                 })
             }
             

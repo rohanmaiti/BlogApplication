@@ -7,20 +7,13 @@
     <link rel="stylesheet" href="">
     <%- include("./partials/head")  %>
     <style>
-        body{
-            background-color:rgb(31, 31, 33);  
-            color: white;
-        }
+        /* < SCROLLING FEATURE START HERE > */
         .container {
         overflow-y: auto;  /* Enables vertical scrollbar */
         overflow-x: hidden; /* Hides horizontal scrollbar */
         scrollbar-width: thin;  /* Firefox: Makes scrollbar thinner */
         scrollbar-color: #e0e0e0 #484848;  /* Firefox: Thumb and Track color */
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
         }
-
         /* WebKit Browsers (Chrome, Edge, Safari) */
         .container::-webkit-scrollbar {
             width: 8px; /* Thin vertical scrollbar */
@@ -29,15 +22,99 @@
             background: #f1f1f1; /* Light background for track */
             border-radius: 10px;
         }
-
         .container::-webkit-scrollbar-thumb {
             background: #888; /* Scrollbar color */
             border-radius: 10px;
         }
-
         .container::-webkit-scrollbar-thumb:hover {
             background: #555; /* Darker on hover */
         }
+        /* < SCROLLING FEATURE ENDS HERE > */
+
+        /*CONTAINER DIV*/
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            
+        }
+
+        /* navbar */
+        .navbar{
+            position: sticky;
+            width: 100%;
+            top: 0;
+        }
+
+        /*h5 is for author name*/
+        h5{
+            color:#f8e7a2;
+             padding-right:10px;
+        }
+        /* blog header container */
+        .blogHeaderContainer{
+            border-bottom:2px solid #4b4b4b;
+            color:#ffb866;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            /* position: sticky;
+            top:20px; */
+        }
+        /* blog text container */
+        .blogContentContainer{
+            padding:20px;
+            color:#d1d1d1;
+            max-height: 20rem;
+            overflow: hidden;
+        }
+        .blogContentContainerSeemore{
+            padding:20px;
+            color:#d1d1d1;
+        }
+        /* blog footer container */
+        .blogFooterContainer{
+            display:flex;
+            gap:15px;
+            padding:20px;
+        }
+        /* blog parent ontainer */
+        .blogParentContainer{ 
+            margin:20px; 
+            margin-top:0px;
+            display:flex; 
+            flex-direction:column; 
+            padding:10px; 
+            /* background-color:grey;  */
+            background: #1b1b1b;
+            /* background: linear-gradient(to bottom, #2e2e2e, #3f3f3f, #3c4150,#464d5c ); */
+            border-radius:4px;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+           
+        }
+        /*INPUT FIELD*/
+        input{
+            width:100%;
+            border:none; 
+            padding:10px;
+            margin: 5px;
+            border-bottom:0.5px solid rgb(49, 49, 49);
+            background-color:#1b1b1b; 
+            color:white;
+        }
+        input:focus {
+        outline: none;
+        border: none;
+        border-bottom: 1px solid black;
+        box-shadow: none;
+        }
+        /*FATHER DIV of INPUT FIELD*/
+        .comment{
+            display: hide;
+            padding: 10px;
+        }
+        /*comment and seemore button */
         .btn{
         background-color: rgb(15, 126, 117);
         color: #f1f1f1;
@@ -45,32 +122,43 @@
         .btn:hover{
         background-color: blue;
         }
+
+
+
+        body{
+            /* background: #393e51;  */
+            /* background: linear-gradient(to bottom, #464d5c, #2c313e, #1a1a1a, #000000); */
+            background: #393e51;
+            color: white;
+        }
+        
         .custom-textarea {
             min-height: 300px !important;  /* Increase height */
             font-size: 16px !important;  /* Increase font size */
             padding: 10px !important;  /* Add padding */
         }
-        .comment{
-            display: hide;
-        }
-        .hide{
+        
+        /* .hide{
             display: block;
-        }
+        } */
         .noBlog{
             display: none;
             text-align: center;
             margin-top:10% ;
         }
-
+      
     </style>
 </head>
 <body>
-   <%- include("./partials/navbar") %>
-   <div class="noBlog">
-    <h1>No Blog is Here</h1>
-   </div>
-   <div class="container"> </div>
-   <%- include("./partials/script") %>
+    <%- include("./partials/navbar") %>
+
+        <div class="noBlog">
+            <h1>No Blog is Here</h1>
+        </div>
+        <div class="container"> </div>
+
+    <%- include("./partials/script") %>
+
     <script>
             const user = <%- JSON.stringify(user) %>; 
             // console.log("user =", user);
@@ -79,7 +167,6 @@
             fetch("/user/blog/allBlogs")
             .then(res=>res.json())
             .then(blogs=>{
-                // console.log(blogs);
                 if(blogs.blogs.length == 0){
                     document.querySelector(".noBlog").style = "display:block;"
                 }
@@ -90,41 +177,64 @@
 
             function createBlogDiv(blog){
             // console.log(blog);
-            let div1 = document.createElement("div");
-            let div2 = document.createElement("div");
-            let div3 = document.createElement("div");
-            let div4 = document.createElement("div");
-            let h1  =  document.createElement("h1");
-            let h2  =  document.createElement("h5");
+            let div1 = document.createElement("div"); // header of blog
+            div1.className = "blogHeaderContainer"
+            let div2 = document.createElement("div"); // text of blog
+            div2.className = "blogContentContainer";
+            let div3 = document.createElement("div"); // footer of blog
+            div3.className = "blogFooterContainer";
+            let div4 = document.createElement("div"); // blog parent container
+            div4.className = "blogParentContainer";
+            
 
-            h2.style = "color:rgb(199, 205, 17); padding-right:10px;"
+            let h1  =  document.createElement("h1"); // for titile of blog
+            let h5  =  document.createElement("h5"); // for author name
+
+            // h5.style = "color:rgb(199, 205, 17); padding-right:10px;"
             h1.innerText = blog.title;
-            h2.innerText = `Author : ${blog.authorName}`
-            div1.append(h1,h2);
+            h5.innerText = `By ${blog.authorName}`
+            div1.append(h1,h5);
 
             let p = document.createElement("p");
             p.innerText = blog.text;
-            // console.log(p);
             div2.append(p);
-            // console.log(div2);
+
+            
 
             let button1 = document.createElement("button");
             button1.setAttribute("class", "btn");
             button1.innerText = "Comments";
+
+            let button2 = document.createElement("button");
+            button2.setAttribute("class", "btn");
+            button2.innerText = "see more";
+
+            // YET TO IMPLEMENT
+            button2.addEventListener("click",()=>{
+                button2.textContent = button2.textContent === "see more" ? "see less" : "see more";
+                if( button2.textContent == "see more"){
+                div2.className = "blogContentContainer"
+                }
+                else{
+                div2.className = "blogContentContainerSeemore"
+                }
+            })
             
             div3.append(button1);
-            // console.log(div3);
-
             div4.append(div1);
             div4.append(div2);
             div4.append(div3);
-            button1.style = "border:none; border-radius:3px; padding:5px; padding-left:10px;padding-right:10px; hover:background-color:red;"
+            // button1.style = "border:none; border-radius:3px; padding:5px; padding-left:10px;padding-right:10px; hover:background-color:red;"
 
-            div1.style = "border-bottom:1px solid #999; color:black; display:flex; justify-content:space-between; align-item:center;"
-            div2.style = "padding:20px;color:black;"
-            div3.style = "display:flex; gap:15px;padding:10px;"
-            div4.style = "box-shadow:1px 1px 3px grey;  display:flex; flex-direction:column; padding:10px; background-color:grey; border-radius:4px;"
+            // div1.style = "border-bottom:1px solid #999; color:black; display:flex; justify-content:space-between; align-item:center;"
+            // div2.style = "padding:20px;color:black;"
+            // div3.style = "display:flex; gap:15px;padding:10px;"
+            // div4.style = "box-shadow:1px 1px 3px grey;  display:flex; flex-direction:column; padding:10px; background-color:grey; border-radius:4px;"
             document.querySelector(".container").appendChild(div4);
+
+            if(isOverflown(div2)){
+                div3.append(button2);   
+            }
             // console.log(div4);
 
             let div5 = document.createElement("div");
@@ -155,7 +265,7 @@
                 }
             })
 
-            input.style = "width:80%;border:none; border-bottom:0.5px solid black; background-color:grey; color:white;";
+            // input.style = "width:80%;border:none; border-bottom:0.5px solid black; background-color:grey; color:white;";
             input.setAttribute("placeholder","write your comment");
             div5.append(input);
             blog.comments.forEach(cmt=>{
@@ -184,6 +294,10 @@
                    div5.style = "display:none;"
                 }
             })
+
+            function isOverflown(element){
+                return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+            }
 
         }
          // FETCHING ALL BLOGS AND CREATING BOX FOR THIS  <END>
