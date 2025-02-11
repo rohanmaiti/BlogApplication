@@ -9,17 +9,21 @@ const {
     handleMyBlogsGet,
     handleUpdateBlogPost,
     handleAllBlogsGet,
-    handleAddCommentPost
+    handleAddCommentPost,
+    handleGetComments,
+    handledeleteCommentPost
      } = require("../controllers/blog.controller.js");
 
 router.get("/yourBlogs",userAuth,handleYourBlogsGet)
 router.get("/createBlog",userAuth,handleCreateBlogGet);
 router.get("/myBlogs",userAuth,handleMyBlogsGet)
 router.get("/allBlogs",userAuth,handleAllBlogsGet);
+router.get("/getComments",userAuth,handleGetComments);
 
 router.post("/createBlog",userAuth,handleCreateBlogPost);
 router.post("/updateBlog",userAuth,handleUpdateBlogPost);
 router.post("/addComment",userAuth,handleAddCommentPost);
+router.post("/deleteComment",userAuth,handledeleteCommentPost);
 
 
 module.exports =  router;

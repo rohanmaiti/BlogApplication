@@ -8,9 +8,14 @@
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <style>
         body{
-            background-color:rgb(212, 212, 212);  
+            background: #393e51;  
             color: rgb(97, 97, 97);
         }
+        .form-control::placeholder {
+            color: grey !important;
+        }
+
+        /*Editors styling Start here*/
         #editor {
         height: 400px; /* Change this value as needed */
         /* border: 1px solid black; */
@@ -47,6 +52,8 @@
         .ql-editor:focus {
         outline: none;
         }
+        /*Editors styling Ends here*/
+
     </style>
 </head>
 <body>
@@ -55,29 +62,17 @@
         <div style="margin: 20px;;" >
             <h3>Create your Blog and share to the World !</h3>
         </div>
-        <div style="margin: 20px;;" class="form-floating mb-3">
-            <input type="text" class="form-control" id="title" placeholder="Enter the Title">
-            <label for="floatingInput">Enter Title</label>
+        <div style="margin: 20px;;" class="mb-3">
+            <input type="text" class="form-control bg-dark text-white p-3" id="title" placeholder="Enter the Title">
         </div>
-        <div style="margin: 20px;;" class="form-floating">
-            <!-- <textarea class="form-control" placeholder="Write your blog" id="text" style="height: 400px"></textarea>
-            <label for="floatingTextarea2">Start Writing</label> -->
+        <div style="margin: 20px;;" class="form-floating" data-bs-theme="dark">
             <div id="editor">
                 <p>Write your Blog here...</p>
-                <!-- <p>Some initial <strong>bold</strong> text</p> -->
-                <p><br /></p>
             </div>
-            <div style="display:flex; justify-content: center;" >
-                <button id="btn" type="button" class="btn btn-outline-primary">Post your blog</button>
+            <div style="display:flex; justify-content: center; margin-top: 10px;" >
+                <button id="btn" type="button" class="btn btn-warning">Post your blog</button>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-
-            <!-- Initialize Quill editor -->
-            <script>
-                // const quill = new Quill('#editor', {
-                //   theme: 'snow'
-                // });
-            </script>
         </div>
         
     </div>
@@ -87,15 +82,25 @@
     <script>
         // Initialize Quill editor start here
         const quill = new Quill('#editor', {
-                  theme: 'snow'
+        theme: 'snow',
+        modules: {
+        toolbar: [
+            [{ 'color': [] }, { 'background': [] }], // Enable text & background color
+            ['bold', 'italic', 'underline'],  // Other basic text styles
+            [{ 'header': [1, 2, false] }],    // Header options
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['clean']  // Remove formatting
+        ]
+    }
         });
         // Initialize Quill editor ends here
 
         document.querySelector("#btn").addEventListener("click",()=>{
             const title = document.querySelector("#title").value.trim();
-            const text  = quill.getText();
+            // const text  = quill.getText();
+            const text = quill.root.innerHTML.trim();
             console.log("text = ",text);
-            if(title == '' || text == ''){
+            if(title == '' || text == '' || text=="<p>Write your Blog here...</p>"){
                 Swal.fire({
                   title: 'warning!',
                   text: 'Title or Text is missing',
@@ -136,8 +141,7 @@
                     });
                     return;
                 })
-            }
-            
+            }   
         })
     </script>
 </body>

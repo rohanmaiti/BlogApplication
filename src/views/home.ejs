@@ -81,17 +81,12 @@
         /* blog parent ontainer */
         .blogParentContainer{ 
             margin:20px; 
-            margin-top:0px;
+            margin-top:10px;
             display:flex; 
             flex-direction:column; 
             padding:10px; 
-            /* background-color:grey;  */
-            background: #1b1b1b;
-            /* background: linear-gradient(to bottom, #2e2e2e, #3f3f3f, #3c4150,#464d5c ); */
+            background: #1f2229;
             border-radius:4px;
-            border-top-left-radius: 0px;
-            border-top-right-radius: 0px;
-           
         }
         /*INPUT FIELD*/
         input{
@@ -111,42 +106,60 @@
         }
         /*FATHER DIV of INPUT FIELD*/
         .comment{
-            display: hide;
-            padding: 10px;
+            display: none;
+            padding: 20px;
         }
         /*comment and seemore button */
         .btn{
-        background-color: rgb(15, 126, 117);
-        color: #f1f1f1;
+        background-color: rgb(7, 203, 92);
+        color: #0a0534;
         }
         .btn:hover{
-        background-color: blue;
+        background-color: rgb(96, 96, 201);
         }
-
-
-
+          /*comment section div / for cach comment START*/
+        .commentParentContainer{
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+        }
+        .commentCreator,.dateAndTime{
+            color:#555;
+            font-size: 0.7rem;
+        }
+        .commentHeader{
+            display: flex;
+            gap: 5px;
+        }
+         /*comment section div / for cach comment ENDS*/
+        
+        
         body{
-            /* background: #393e51;  */
-            /* background: linear-gradient(to bottom, #464d5c, #2c313e, #1a1a1a, #000000); */
             background: #393e51;
             color: white;
         }
-        
-        .custom-textarea {
-            min-height: 300px !important;  /* Increase height */
-            font-size: 16px !important;  /* Increase font size */
-            padding: 10px !important;  /* Add padding */
-        }
-        
-        /* .hide{
-            display: block;
-        } */
+        /*NO BLOG IF NO BLOG PRESENT*/
         .noBlog{
             display: none;
             text-align: center;
             margin-top:10% ;
         }
-      
+
+        /*SETTING DELETE ICON*/
+        .deleteIcon{
+            width: 2px;
+        }
+        .deleteImage{
+            width: 25px;
+        }
+        .deleteImage:hover{
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+        .commentBody{
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
@@ -156,7 +169,6 @@
             <h1>No Blog is Here</h1>
         </div>
         <div class="container"> </div>
-
     <%- include("./partials/script") %>
 
     <script>
@@ -175,7 +187,8 @@
                 })
             })
 
-            function createBlogDiv(blog){
+            // creating div for each blog
+            function createBlogDiv(blog){ 
             // console.log(blog);
             let div1 = document.createElement("div"); // header of blog
             div1.className = "blogHeaderContainer"
@@ -191,25 +204,29 @@
             let h5  =  document.createElement("h5"); // for author name
 
             // h5.style = "color:rgb(199, 205, 17); padding-right:10px;"
-            h1.innerText = blog.title;
-            h5.innerText = `By ${blog.authorName}`
+            h1.innerHTML = blog.title;
+            h5.innerHTML = `By ${blog.authorName}`
             div1.append(h1,h5);
 
             let p = document.createElement("p");
-            p.innerText = blog.text;
+            p.innerHTML = blog.text;
             div2.append(p);
-
-            
 
             let button1 = document.createElement("button");
             button1.setAttribute("class", "btn");
-            button1.innerText = "Comments";
+            button1.innerHTML = "Comments";
 
             let button2 = document.createElement("button");
             button2.setAttribute("class", "btn");
-            button2.innerText = "see more";
+            button2.innerHTML = "see more";
+            
+            div3.append(button1);
+            div4.append(div1);
+            div4.append(div2);
+            div4.append(div3);
+            document.querySelector(".container").appendChild(div4);
 
-            // YET TO IMPLEMENT
+            // HANDLING SEE MORE BUTTON CLICK
             button2.addEventListener("click",()=>{
                 button2.textContent = button2.textContent === "see more" ? "see less" : "see more";
                 if( button2.textContent == "see more"){
@@ -219,37 +236,28 @@
                 div2.className = "blogContentContainerSeemore"
                 }
             })
-            
-            div3.append(button1);
-            div4.append(div1);
-            div4.append(div2);
-            div4.append(div3);
-            // button1.style = "border:none; border-radius:3px; padding:5px; padding-left:10px;padding-right:10px; hover:background-color:red;"
-
-            // div1.style = "border-bottom:1px solid #999; color:black; display:flex; justify-content:space-between; align-item:center;"
-            // div2.style = "padding:20px;color:black;"
-            // div3.style = "display:flex; gap:15px;padding:10px;"
-            // div4.style = "box-shadow:1px 1px 3px grey;  display:flex; flex-direction:column; padding:10px; background-color:grey; border-radius:4px;"
-            document.querySelector(".container").appendChild(div4);
-
+            // if div2 is overflown then only display the see more button
             if(isOverflown(div2)){
                 div3.append(button2);   
             }
-            // console.log(div4);
 
-            let div5 = document.createElement("div");
+            
+            let div5 = document.createElement("div"); // for displaying all comments this is the father div
             div5.className = "comment";
-            const input = document.createElement("input");
+            const input = document.createElement("input"); // for taking comments from user
             input.setAttribute("type","text");
             input.setAttribute("name","comment");
 
+            // HANDLING ON ENTER CLICK IN INPUT
             input.addEventListener("keypress",(e)=>{
                 // console.log("user = ",user);
                 if(e.key == "Enter"){ // login of commnet going to db and displayed
                     let comment = {
                         name : user.name,
                         comment : e.target.value.trim(),
-                        id: blog._id
+                        blog_id: blog._id,
+                        createdAt:getDateandTime(),
+                        user_id : user._id
                     }
                     fetch("/user/blog/addComment",{
                         method:"POST",
@@ -260,34 +268,73 @@
                     })
                     .then(res=>res.json())
                     .then(res=>{
-                        createCommentDiv(comment);
+                        createCommentDiv(res.cmt);
                     })
                 }
             })
-
-            // input.style = "width:80%;border:none; border-bottom:0.5px solid black; background-color:grey; color:white;";
             input.setAttribute("placeholder","write your comment");
             div5.append(input);
-            blog.comments.forEach(cmt=>{
-                createCommentDiv(cmt);
-            })
-            div4.appendChild(div5);
-            div5.style = "display:none;"
 
+            // HANDLING COMMENTS that will come from DB
+            fetch(`/user/blog/getComments/?id=${blog._id}`)
+            .then(res=>res.json())
+            .then(comments=>{
+                // console.log("x",comments);
+                // working pending sort the comments on the order of latest first
+                comments.comments.forEach(cmt=>{
+                createCommentDiv(cmt);
+                })
+                div4.appendChild(div5);
+            })
+
+            // creating div form each COMMENT
             function createCommentDiv(cmt){
                 let div = document.createElement("div");
+                div.className = "commentParentContainer";
+                let div2 = document.createElement("div");
+                div2.className = "commentHeader"
+                let div3 = document.createElement("div");
+                div3.className = "commentBody"
+
                 let span1 = document.createElement("span");
+                span1.className = "commentCreator";
                 let span2 = document.createElement("span");
-                span1.innerText = cmt.name;
-                span2.innerText = cmt.comment;
-                div.append(span1, span2);
+                span2.className = "commentText";
+                let span3 = document.createElement("span");
+                span3.className = "dateAndTime";
+             
+                let span4 = document.createElement("span");
+
+                // limiting delete button for current user 
+                if(cmt.user_id == user._id){
+                span4.className = "deleteIcon";
+                var img = document.createElement("img");
+                img.className = "deleteImage"
+                img.setAttribute("src","https://img.icons8.com/?size=100&id=KtLdJpNivpcV&format=png&color=000000");
+
+                // setting delete button behavior
+                img.addEventListener("click",(e)=>{
+                deleteComment(cmt._id);
+                div.remove();
+                })
+                span4.append(img);
+                }
+
+                span3.innerHTML = cmt.createdAt;
+                span1.innerHTML = cmt.name;            
+                span2.innerHTML = cmt.comment;
+
+                div3.append(span2,span4);
+                div2.append(span1,span3)
+                div.append(div2, div3);
                 div5.append(div);
             }
 
-
+           
+            // handling click event on comments button
             button1.addEventListener("click",async ()=>{
-                button1.textContent = button1.textContent === "Comments" ? "Hide" : "Comments";
-                if( button1.textContent == "Hide"){
+                button1.textContent = button1.textContent === "Comments" ? "Hide Comments" : "Comments";
+                if( button1.textContent == "Hide Comments"){
                     div5.style = "display:block;"
                 }
                 else{
@@ -295,12 +342,42 @@
                 }
             })
 
-            function isOverflown(element){
-                return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
-            }
+           
 
         }
-         // FETCHING ALL BLOGS AND CREATING BOX FOR THIS  <END>
+        // FETCHING ALL BLOGS AND CREATING BOX FOR THIS  <END>
+
+        // function for checking is div is over flown or not 
+        function isOverflown(element){
+            return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+        }    
+
+        // function for gettting date and time in dd/mm/yy hh:mm format
+        function getDateandTime(){
+        const date = new Date();
+        const formattedDate = date.toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+        return(formattedDate.replace(",", ""));
+        }
+
+        // Function for deleting comment from DB
+        async function deleteComment(id){
+            let obj = {id:id};
+            fetch("/user/blog/deleteComment",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(obj)
+            })
+        }
+        
     </script>
 </body>
 </html>

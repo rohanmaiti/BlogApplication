@@ -19,6 +19,7 @@ console.log("connected to DB");
 // this will parse req.body 
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(express.static("./public"));
 
 // initialising session 
 app.use(session({

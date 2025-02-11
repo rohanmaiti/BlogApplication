@@ -1,4 +1,5 @@
 const Blog = require("../models/blog.model");
+const Comment = require("../models/comment.model");
 
 function handleCreateBlogGet(req,res){
     res.render("createBlog",{user : req.session.user});
@@ -56,14 +57,31 @@ async function handleAllBlogsGet(req,res){
 }
 
 async function handleAddCommentPost(req,res){
-    const {name, comment, id} = req.body;
-    // console.log(id);
-    const blog = await Blog.findById(id);
-    // console.log(blog);
-    blog.comments.push({ name, comment });
-    await blog.save();
-    res.status(200).json({ message: "Comment added successfully", blog });
+    const {name, comment, blog_id, createdAt, user_id} = req.body;
+    const cmt = await Comment.create({
+        comment,
+        blog_id,
+        createdAt,
+        name,
+        user_id
+    })
+    res.status(200).json({ message: "Comment added successfully",cmt});
 }
+
+async function handleGetComments(req,res){
+    const {id} = req.query;
+    const comments = await Comment.find({blog_id:id});
+    res.status(200).json({comments:comments});
+}
+async function handledeleteCommentPost(req,res){
+    const {id} = req.body;
+    const comment = await Comment.deleteOne({_id:id});
+    // console.log(comment);
+    res.status(200).json({message:"Comment Deleted"});
+}
+
+
+
 
 module.exports = {
     handleCreateBlogGet, 
@@ -72,5 +90,7 @@ module.exports = {
     handleMyBlogsGet,
     handleUpdateBlogPost,
     handleAllBlogsGet,
-    handleAddCommentPost
+    handleAddCommentPost,
+    handleGetComments,
+    handledeleteCommentPost
 }
