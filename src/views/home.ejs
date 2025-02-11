@@ -7,38 +7,29 @@
     <link rel="stylesheet" href="">
     <%- include("./partials/head")  %>
     <style>
-        /* < SCROLLING FEATURE START HERE > */
+       /* SCROLLING FEATURE */
         .container {
-        overflow-y: auto;  /* Enables vertical scrollbar */
-        overflow-x: hidden; /* Hides horizontal scrollbar */
-        scrollbar-width: thin;  /* Firefox: Makes scrollbar thinner */
-        scrollbar-color: #e0e0e0 #484848;  /* Firefox: Thumb and Track color */
+            overflow-y: auto;  /* Enables vertical scrolling */
+            overflow-x: hidden; /* Hides horizontal scrolling */
+            scrollbar-width: none;  /* Firefox: Hides scrollbar */
+            -ms-overflow-style: none; /* IE and Edge: Hides scrollbar */
         }
+        
         /* WebKit Browsers (Chrome, Edge, Safari) */
         .container::-webkit-scrollbar {
-            width: 8px; /* Thin vertical scrollbar */
+            display: none; /* Hides scrollbar */
         }
-        .container::-webkit-scrollbar-track {
-            background: #f1f1f1; /* Light background for track */
-            border-radius: 10px;
-        }
-        .container::-webkit-scrollbar-thumb {
-            background: #888; /* Scrollbar color */
-            border-radius: 10px;
-        }
-        .container::-webkit-scrollbar-thumb:hover {
-            background: #555; /* Darker on hover */
-        }
-        /* < SCROLLING FEATURE ENDS HERE > */
-
-        /*CONTAINER DIV*/
-        .container{
+        
+        /* CONTAINER DIV */
+        .container {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            
         }
 
+    /* < SCROLLING FEATURE ENDS HERE > */
+
+        
         /* navbar */
         .navbar{
             position: sticky;
@@ -166,7 +157,7 @@
     <%- include("./partials/navbar") %>
 
         <div class="noBlog">
-            <h1>No Blog is Here</h1>
+            <h1>There are zero Blogs !!</h1>
         </div>
         <div class="container"> </div>
     <%- include("./partials/script") %>

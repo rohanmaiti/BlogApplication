@@ -56,6 +56,15 @@ async function handleAllBlogsGet(req,res){
     res.json({blogs:blogs});
 }
 
+async function handleDeleteBlog(req,res){
+    const {id} = req.body;
+    const blog = await Blog.findOne({_id:id});
+    if(blog.authorEmail == req.session.user.email){
+        await Blog.deleteOne({_id:id});
+    }
+    res.status(200).json({message:"Blog deleted successfully"})
+}
+
 async function handleAddCommentPost(req,res){
     const {name, comment, blog_id, createdAt, user_id} = req.body;
     const cmt = await Comment.create({
@@ -92,5 +101,6 @@ module.exports = {
     handleAllBlogsGet,
     handleAddCommentPost,
     handleGetComments,
-    handledeleteCommentPost
+    handledeleteCommentPost,
+    handleDeleteBlog
 }

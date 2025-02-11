@@ -7,66 +7,166 @@
     <%- include("./partials/head")  %>
     <style>
           body{
-            background-color:rgb(31, 31, 33);  
+            background: #393e51;
             color: white;
-            /* color:#888 */
         }
         .container {
-    overflow-y: auto;  /* Enables vertical scrollbar */
-    overflow-x: hidden; /* Hides horizontal scrollbar */
-    scrollbar-width: thin;  /* Firefox: Makes scrollbar thinner */
-    scrollbar-color: #e0e0e0 #484848;  /* Firefox: Thumb and Track color */
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+        overflow-y: auto;  /* Enables vertical scrollbar */
+        overflow-x: hidden; /* Hides horizontal scrollbar */
+        scrollbar-width: thin;  /* Firefox: Makes scrollbar thinner */
+        scrollbar-color: #e0e0e0 #484848;  /* Firefox: Thumb and Track color */
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        overflow: scroll;   
+        background-color:rgb(60, 67, 84);  ; 
+        height: 90vh; 
+        border-radius: 5px; 
+        padding-top:20px;
+        display: flex;
+        flex-direction: column;
+}
+/* SCROLLING FEATURE */
+.container {
+    overflow-y: auto;  /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hides horizontal scrolling */
+    scrollbar-width: none;  /* Firefox: Hides scrollbar */
+    -ms-overflow-style: none; /* IE and Edge: Hides scrollbar */
 }
 
 /* WebKit Browsers (Chrome, Edge, Safari) */
 .container::-webkit-scrollbar {
-    width: 8px; /* Thin vertical scrollbar */
+    display: none; /* Hides scrollbar */
 }
 
-.container::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Light background for track */
-    border-radius: 10px;
-}
-
-.container::-webkit-scrollbar-thumb {
-    background: #888; /* Scrollbar color */
-    border-radius: 10px;
-}
-
-.container::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Darker on hover */
-}
-
-
-.btn{
-background-color: rgb(15, 126, 117);
-color: #f1f1f1;
-}
-.btn:hover{
-background-color: blue;
-}
-
-
-.custom-textarea {
-    min-height: 300px !important;  /* Increase height */
-    font-size: 16px !important;  /* Increase font size */
-    padding: 10px !important;  /* Add padding */
-}
+/* CONTAINER DIV */
+/* .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+} */
 
 
 
+/******************************/
+ /* blog header container */
+ .blogHeaderContainer{
+            border-bottom:2px solid #4b4b4b;
+            color:#ffb866;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            /* position: sticky;
+            top:20px; */
+        }
+        /* blog text container */
+        .blogContentContainer{
+            padding:20px;
+            color:#d1d1d1;
+            max-height: 20rem;
+            overflow: hidden;
+        }
+        .blogContentContainerSeemore{
+            padding:20px;
+            color:#d1d1d1;
+        }
+        /* blog footer container */
+        .blogFooterContainer{
+            display:flex;
+            gap:15px;
+            padding:20px;
+        }
+        /* blog parent ontainer */
+        .blogParentContainer{ 
+            margin:20px; 
+            margin-top:10px;
+            display:flex; 
+            flex-direction:column; 
+            padding:10px; 
+            background: #1f2229;
+            border-radius:4px;
+        }
 
+        .btn{
+            border: none;
+            background-color: rgb(15, 126, 117);
+            color: #f1f1f1;
+        }
+        .btn:hover{
+            background-color: blue;
+        }
+
+        .deleteBtn{
+            background-color: rgb(180, 27, 27);
+            color: #f1f1f1;
+        }
+        .editBtn{
+            background-color: rgb(185, 147, 22);
+            color: #2e2d2d;
+        }
+        .seeMoreBtn{
+            background-color: rgb(108, 5, 124);
+            color: #ffffff;
+        }
+        .commentBtn{
+            background-color: rgb(4, 195, 179);
+            color:#000000
+        }
+
+          /*comment section div / for cach comment START*/
+          .commentParentContainer{
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+        }
+        .commentCreator,.dateAndTime{
+            color:#555;
+            font-size: 0.7rem;
+        }
+        .commentHeader{
+            display: flex;
+            gap: 5px;
+        }
+
+         /*SETTING DELETE ICON*/
+         .deleteIcon{
+            width: 2px;
+        }
+        .deleteImage{
+            width: 25px;
+        }
+        .deleteImage:hover{
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+        .commentBody{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .comment{
+            display: none;
+            padding: 20px;
+        }
+
+        .noBlog{
+            display: none;
+            text-align: center;
+            margin-top:10% ;
+            color:#959595
+        }
+        /* style="overflow: scroll;   background-color:rgb(59, 59, 60) style="overflow: scroll;   background-color:rgb(59, 59, 60);  ; height: 90vh; border-radius: 5px; padding-top:20px;";" */
 
 
     </style>
 </head>
 <body>
     <%- include("./partials/navbar") %>
-    <div style="overflow: scroll;   background-color:rgb(59, 59, 60);  ; height: 90vh; border-radius: 5px; padding-top:20px;" class="container">
-
+    
+    <div class="container">
+        <div class="noBlog">
+            <h1>You don't have any blog</h1>
+        </div>
     </div>
     <%- include("./partials/script") %>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -75,6 +175,9 @@ background-color: blue;
         .then(res=>res.json())
         .then(blogs=>{
             // console.log(blogs);
+            if(blogs.blogs.length == 0){
+                document.querySelector(".noBlog").style = "display:block;"
+            }
             blogs.blogs.forEach(blog=>{
                 createBlogDiv(blog);
             })
@@ -82,44 +185,149 @@ background-color: blue;
 
             function createBlogDiv(blog){
             // console.log(blog);
-            let div1 = document.createElement("div");
-            let div2 = document.createElement("div");
-            let div3 = document.createElement("div");
-            let div4 = document.createElement("div");
-            let h1  =  document.createElement("h1");
+            
+            let div1 = document.createElement("div"); // header of blog
+            div1.className = "blogHeaderContainer"
+            let div2 = document.createElement("div"); // text of blog
+            div2.className = "blogContentContainer";
+            let div3 = document.createElement("div"); // footer of blog
+            div3.className = "blogFooterContainer";
+            let div4 = document.createElement("div"); // blog parent container
+            div4.className = "blogParentContainer";
+
+            let h1  =  document.createElement("h1"); 
             h1.innerText = blog.title;
             div1.append(h1);
 
             let p = document.createElement("p");
-            p.innerText = blog.text;
-            // console.log(p);
+            p.innerHTML = blog.text;
             div2.append(p);
-            // console.log(div2);
+  
 
             let button1 = document.createElement("button");
-            button1.setAttribute("class", "btn");
+            button1.setAttribute("class", "btn commentBtn");
             button1.innerText = "Comments";
+
+
             let button2 = document.createElement("button");
-            button2.setAttribute("class", "btn");
-            button2.innerText = "Edit"
-            div3.append(button1,button2);
+            button2.setAttribute("class", "btn seeMoreBtn");
+            button2.innerHTML = "see more";
 
-            // console.log(div3);
+            let button3 = document.createElement("button");
+            button3.setAttribute("class", "btn editBtn");
+            button3.innerText = "Edit"
 
+            let button4 = document.createElement("button");
+            button4.setAttribute("class", "btn deleteBtn");
+            button4.innerText = "delete"
+
+            div3.append(button1,button3,button4);
             div4.append(div1);
             div4.append(div2);
             div4.append(div3);
-            button1.style = "border:none; border-radius:3px; padding:5px; padding-left:10px;padding-right:10px; hover:background-color:red;"
-            button2.style = "border:none; border-radius:3px; padding:5px; padding-left:10px;padding-right:10px;"
-
-            div1.style = "border-bottom:1px solid #999; color:black;"
-            div2.style = "padding:20px;color:black;"
-            div3.style = "display:flex; gap:15px;padding:10px;"
-            div4.style = "box-shadow:1px 1px 3px grey;  display:flex; flex-direction:column; padding:10px; background-color:grey; border-radius:4px;"
             document.querySelector(".container").appendChild(div4);
-            // console.log(div4);
+            if(isOverflown(div2)){
+                div3.append(button2);   
+            }
+            button2.addEventListener("click",()=>{
+                button2.textContent = button2.textContent === "see more" ? "see less" : "see more";
+                if( button2.textContent == "see more"){
+                div2.className = "blogContentContainer"
+                }
+                else{
+                div2.className = "blogContentContainerSeemore"
+                }
+            })
 
-            button2.addEventListener("click",async ()=>{
+
+            let div5 = document.createElement("div"); // for displaying all comments this is the father div
+            div5.className = "comment";
+
+            // HANDLING COMMENTS that will come from DB
+            fetch(`/user/blog/getComments/?id=${blog._id}`)
+            .then(res=>res.json())
+            .then(comments=>{
+                // console.log("x",comments);
+                // working pending sort the comments on the order of latest first
+                comments.comments.forEach(cmt=>{
+                createCommentDiv(cmt);
+                })
+                div4.appendChild(div5);
+            })
+
+            // creating div form each COMMENT
+            function createCommentDiv(cmt){
+                let div = document.createElement("div");
+                div.className = "commentParentContainer";
+                let div2 = document.createElement("div");
+                div2.className = "commentHeader"
+                let div3 = document.createElement("div");
+                div3.className = "commentBody"
+
+                let span1 = document.createElement("span");
+                span1.className = "commentCreator";
+                let span2 = document.createElement("span");
+                span2.className = "commentText";
+                let span3 = document.createElement("span");
+                span3.className = "dateAndTime";
+             
+                let span4 = document.createElement("span");
+
+                // do not limiting delete button for current user 
+                // if(cmt.user_id == user._id){
+                span4.className = "deleteIcon";
+                var img = document.createElement("img");
+                img.className = "deleteImage"
+                img.setAttribute("src","https://img.icons8.com/?size=100&id=KtLdJpNivpcV&format=png&color=000000");
+
+                // setting COMMENT DELETE button behavior
+                img.addEventListener("click",(e)=>{
+                deleteComment(cmt._id);
+                div.remove();
+                })
+                span4.append(img);
+                // }
+
+                span3.innerHTML = cmt.createdAt;
+                span1.innerHTML = cmt.name;            
+                span2.innerHTML = cmt.comment;
+
+                div3.append(span2,span4);
+                div2.append(span1,span3)
+                div.append(div2, div3);
+                div5.append(div);
+            }
+
+
+             // handling click event on comments button
+             button1.addEventListener("click",async ()=>{
+                button1.textContent = button1.textContent === "Comments" ? "Hide Comments" : "Comments";
+                if( button1.textContent == "Hide Comments"){
+                    div5.style = "display:block;"
+                }
+                else{
+                   div5.style = "display:none;"
+                }
+            })
+
+            
+
+
+
+            button4.addEventListener("click",()=>{
+                // delete post
+                const obj = {id:blog._id};
+                fetch("/user/blog/deleteBlog",{
+                    method:"DELETE",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify(obj)
+                })
+                div4.remove();
+            })
+
+            button3.addEventListener("click",async ()=>{
                 // console.log("ghgh")
                 const x = await Swal.fire({
                   input: "textarea",
@@ -177,6 +385,37 @@ background-color: blue;
                 })
             })
 
+        }
+
+        // function for checking is div is over flown or not 
+        function isOverflown(element){
+            return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+        }   
+
+          // function for gettting date and time in dd/mm/yy hh:mm format
+          function getDateandTime(){
+        const date = new Date();
+        const formattedDate = date.toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+        return(formattedDate.replace(",", ""));
+        }
+
+        // Function for deleting comment from DB
+        async function deleteComment(id){
+            let obj = {id:id};
+            fetch("/user/blog/deleteComment",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(obj)
+            })
         }
     </script>
 </body>
