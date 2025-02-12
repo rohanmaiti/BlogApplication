@@ -8,7 +8,7 @@ async function handleSignupPost(req,res){
         const hash = await bcrypt.hashSync(password, salt)
         // const user = new User({name:name , email: email, password:hash})
         // await user.save();
-        const uesr = await User.create({
+        const user = await User.create({
             name,
             email,
             password
