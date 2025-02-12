@@ -9,9 +9,9 @@ async function handleSignupPost(req,res){
         // const user = new User({name:name , email: email, password:hash})
         // await user.save();
         const user = await User.create({
-            name,
-            email,
-            password
+            name:name,
+            email:email,
+            password:hash
         })
         req.session.user = user;
         res.redirect("/home");
