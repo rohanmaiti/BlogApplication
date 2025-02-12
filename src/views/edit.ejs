@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Blog</title>
+    <title>Edit Blog</title>
+    <!-- CDN header linkfor bootstrap -->
     <%- include("./partials/head")  %>
+    <!-- CDN link for css of quill editor -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <!-- CDN script for text editor quill -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <!-- CDN script for bootstrap -->
+    <%- include("./partials/script") %>
+    <!-- CDN script for sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body{
             background: #393e51;  
@@ -57,7 +65,10 @@
     </style>
 </head>
 <body>
+    <!-- start navbar component of bootstrap -->
     <%- include("./partials/navbar") %>
+
+    <!-- start main container -->
     <div class="container">
         <div style="margin: 20px;;" >
             <h3>Edit Your Blog</h3>
@@ -72,13 +83,12 @@
             <div style="display:flex; justify-content: center; margin-top: 10px;" >
                 <button id="btn" type="button" class="btn btn-warning">Update</button>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-        </div>
-        
+        </div> 
     </div>
+    <!-- end main container -->
+
    
-    <%- include("./partials/script") %>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
 
     <script>
         // Initialize Quill editor start here
@@ -97,21 +107,23 @@
         });
         // Initialize Quill editor ends here
 
+        
+
         document.querySelector("#btn").addEventListener("click",()=>{
+            // No need of title as title is fixed
             // const title = document.querySelector("#title").value.trim();
-            // const text  = quill.getText();
             const text = quill.root.innerHTML.trim();
-            console.log("text = ",text);
-            console.log("blog.text = ",blog.text);
-            console.log(blog._id);
+            // console.log("text = ",text);
+            // console.log("blog.text = ",blog.text);
+            // console.log(blog._id);
             // if previous text matched then do not update it 
-            if(text == "" || text == blog.text.trim() ){
+            if(text == "" || normalizeHtml(text) == normalizeHtml(blog.text) ){ 
                 Swal.fire({
                   title: 'warning!',
                   text: 'Edit something to Update',
                   icon: 'warning',
                   confirmButtonText: 'got it'
-                })
+                });
                 return;
             }
             else{
@@ -119,6 +131,7 @@
                     text : text,
                     id:blog._id
                 }
+                // UPDATE THE UPDATED BLOG INTO DB
                 fetch("/user/blog/updateBlog",{
                     method:"POST",
                     headers:{
@@ -134,20 +147,25 @@
                     draggable: true
                     })
                     blog.text = updatedText.text;
-
                     return;
                 })
                 .catch(err=>{
                     console.log(err);
+                    return
                     Swal.fire({
                       title: "Error in Uploading Blog",
                       text: `something went wrong`,
                       icon: "error"
                     });
-                    return;
+                   
                 })
             }   
         })
+
+        // function to normalise both html for comparision
+        function normalizeHtml(html) {
+        return html.replace(/\s+/g, '').toLowerCase(); // Remove extra spaces and lowercase
+        }
     </script>
 </body>
 </html>

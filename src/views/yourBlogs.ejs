@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Blogs</title>
+    <!-- CDN header linkfor bootstrap -->
     <%- include("./partials/head")  %>
+     <!-- CDN script for bootstrap -->
+    <%- include("./partials/script") %>
+     <!-- CDN script for sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-          body{
+        body{
             background: #393e51;
             color: white;
         }
@@ -39,18 +44,10 @@
     display: none; /* Hides scrollbar */
 }
 
-/* CONTAINER DIV */
-/* .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-} */
-
-
 
 /******************************/
- /* blog header container */
- .blogHeaderContainer{
+        /* blog header container */
+        .blogHeaderContainer{
             border-bottom:2px solid #4b4b4b;
             color:#ffb866;
             display:flex;
@@ -89,7 +86,6 @@
 
         .btn{
             border: none;
-            background-color: rgb(15, 126, 117);
             color: #f1f1f1;
         }
         .btn:hover{
@@ -97,20 +93,20 @@
         }
 
         .deleteBtn{
-            background-color: rgb(180, 27, 27);
+            background-color: rgb(225, 6, 6);
             color: #f1f1f1;
         }
         .editBtn{
-            background-color: rgb(185, 147, 22);
-            color: #2e2d2d;
+            background-color: rgb(240, 196, 50);
+            color: #000000;
         }
         .seeMoreBtn{
             background-color: rgb(108, 5, 124);
             color: #ffffff;
         }
         .commentBtn{
-            background-color: rgb(4, 195, 179);
-            color:#000000
+            background-color: rgb(2, 62, 145);
+            color:#ffffff
         }
 
           /*comment section div / for cach comment START*/
@@ -155,8 +151,6 @@
             margin-top:10% ;
             color:#959595
         }
-        /* style="overflow: scroll;   background-color:rgb(59, 59, 60) style="overflow: scroll;   background-color:rgb(59, 59, 60);  ; height: 90vh; border-radius: 5px; padding-top:20px;";" */
-
 
     </style>
 </head>
@@ -168,8 +162,7 @@
             <h1>You don't have any blog</h1>
         </div>
     </div>
-    <%- include("./partials/script") %>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
     <script>
         fetch("/user/blog/myBlogs")
         .then(res=>res.json())
@@ -178,14 +171,16 @@
             if(blogs.blogs.length == 0){
                 document.querySelector(".noBlog").style = "display:block;"
             }
-            blogs.blogs.forEach(blog=>{
+            const array = blogs.blogs;
+            array.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+            array.forEach(blog=>{
                 createBlogDiv(blog);
             })
         })
 
-            function createBlogDiv(blog){
+        // Creating div for each blog
+        function createBlogDiv(blog){
             // console.log(blog);
-            
             let div1 = document.createElement("div"); // header of blog
             div1.className = "blogHeaderContainer"
             let div2 = document.createElement("div"); // text of blog
@@ -206,7 +201,7 @@
 
             let button1 = document.createElement("button");
             button1.setAttribute("class", "btn commentBtn");
-            button1.innerText = "Comments";
+            button1.innerText = "comments";
 
 
             let button2 = document.createElement("button");
@@ -215,7 +210,7 @@
 
             let button3 = document.createElement("button");
             button3.setAttribute("class", "btn editBtn");
-            button3.innerText = "Edit"
+            button3.innerText = "edit"
 
             let button4 = document.createElement("button");
             button4.setAttribute("class", "btn deleteBtn");
@@ -248,8 +243,10 @@
             .then(res=>res.json())
             .then(comments=>{
                 // console.log("x",comments);
-                // working pending sort the comments on the order of latest first
-                comments.comments.forEach(cmt=>{
+                // working done on sort the comments on the order of latest first
+                const array = comments.comments;
+                array.sort((a,b)=> new Date(a.createdAt) - new Date(b.createdAt));
+                array.forEach(cmt=>{
                 createCommentDiv(cmt);
                 })
                 div4.appendChild(div5);
@@ -288,14 +285,14 @@
                 span4.append(img);
                 // }
 
-                span3.innerHTML = cmt.createdAt;
+                span3.innerHTML = cmt.createdat;
                 span1.innerHTML = cmt.name;            
                 span2.innerHTML = cmt.comment;
 
                 div3.append(span2,span4);
                 div2.append(span1,span3)
                 div.append(div2, div3);
-                div5.append(div);
+                div5.prepend(div);
             }
 
 
@@ -358,64 +355,9 @@
 
             // HANDLING EDIT BUTTON
             button3.addEventListener("click",async ()=>{
-                console.log("blog edit button clicked")
-                console.log(blog._id);
-                // const obj = {blog_id : blog._id};
+                // console.log("blog edit button clicked")
+                // console.log(blog._id);
                 window.location.href = (`/user/blog/edit?blog_id=${blog._id}`)
-                // const x = await Swal.fire({
-                //   input: "textarea",
-                //   inputLabel: "Message",
-                //   inputPlaceholder: "Type your message here...",
-                //   inputValue:p.innerText,
-                //   inputAttributes: {
-                //     "aria-label": "Type your message here"
-                //   },
-                //   showCancelButton: true,
-                //   confirmButtonText: "Update",
-                //   customClass: {
-                //     input: "custom-textarea" // Apply custom class
-                //   }
-                // }).then(result=>{
-                //     if(result.isConfirmed){
-                //         if(p.innerText == result.value.trim()){
-                //             Swal.fire({
-                //               title: "Nothig to be updated",
-                //               text: "add or detele text to update",
-                //               icon: "question"
-                //             });
-                //             return;
-                //         }
-                //         // update the text
-                //         // console.log("updated text", result.value);
-                //         const updatedText = {
-                //             text : result.value.trim(),
-                //             id:blog._id
-                //         }
-                //         fetch("/user/blog/updateBlog",{
-                //             method:"POST",
-                //             headers:{
-                //                 "Content-Type":"application/json"
-                //             },
-                //             body:JSON.stringify(updatedText)
-                //         })
-                //         .then(res=>{
-                //             Swal.fire({
-                //               title: "Successfully updated!",
-                //               icon: "success",
-                //               draggable: true
-                //             }).then(()=>{
-                //                 p.innerText = result.value;
-                //             })
-                //         }).catch(err=>{
-                //             Swal.fire({
-                //               title: "Error in updating!",
-                //               icon: "error",
-                //               draggable: true
-                //             });
-                //         })
-                        
-                //     }
-                // })
             })
 
         }
@@ -426,7 +368,7 @@
         }   
 
           // function for gettting date and time in dd/mm/yy hh:mm format
-          function getDateandTime(){
+        function getDateandTime(){
         const date = new Date();
         const formattedDate = date.toLocaleString("en-GB", {
           day: "2-digit",

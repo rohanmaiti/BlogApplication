@@ -66,11 +66,11 @@ async function handleDeleteBlog(req,res){
 }
 
 async function handleAddCommentPost(req,res){
-    const {name, comment, blog_id, createdAt, user_id} = req.body;
+    const {name, comment, blog_id, createdat, user_id} = req.body;
     const cmt = await Comment.create({
         comment,
         blog_id,
-        createdAt,
+        createdat,
         name,
         user_id
     })

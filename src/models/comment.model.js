@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema({
         ref:Blogs,
         require:true
     },
-    createdAt:{
+    createdat:{
         type:String,
         require:true
     },
@@ -23,7 +23,9 @@ const commentSchema = new mongoose.Schema({
         type:String,
         ref:User
     }
-})
+},
+{timestamps:true}
+)
 
 const Comment = mongoose.model("comments",commentSchema);
 module.exports = Comment;

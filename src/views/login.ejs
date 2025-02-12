@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Loginpage</title>
+    <!-- CDN header linkfor bootstrap -->
     <%- include("./partials/head") %>
+     <!-- CDN script for bootstrap -->
+    <%- include("./partials/script") %>
+     <!-- CDN script for sweetalert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -15,14 +19,15 @@
     </style>
 </head>
 <body>
+    <!--start login component -->
     <%- include("./partials/loginForm") %>
+    <!--end login component -->
     
-    <%- include("./partials/script") %>
 
     <script>
+       // handling on clicking login button
         document.querySelector("form").addEventListener("submit",(e)=>{
           e.preventDefault();
-        //   console.log("submit signup")
           const obj = {
             email:document.querySelector("#exampleInputEmail1").value.trim(),
             password:document.querySelector("#exampleInputPassword1").value.trim(),
@@ -41,6 +46,7 @@
                 throw new Error(`${res.messages}`);
             }
             if(res.redirected){
+              // toasting a success msg
               const Toast = Swal.mixin({
               toast: true,
               position: "top-end",
@@ -57,22 +63,22 @@
               title: "login in successfull"
             });
             
+            // delaying the rediction to see the effect of toast
             setTimeout(()=>{
                 window.location.href = "/home"
             },1000)
             }
-            // res.json()
           })
           .then(res=>{
-            // console.log("res",res);
+
           })
           .catch((err)=>{
-          console.log("err",err);
-          Swal.fire({
+            console.log("err",err);
+            Swal.fire({
               title: "Credential does not matched",
               icon: "error",
               draggable: true
-          });
+            });
           })
     })
        

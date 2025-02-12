@@ -6,6 +6,7 @@ async function handleSignupPost(req,res){
         const {name, email, password} = req.body;
         const salt = await bcrypt.genSaltSync(10);
         const hash = await bcrypt.hashSync(password, salt)
+        // this method also can create 
         // const user = new User({name:name , email: email, password:hash})
         // await user.save();
         const user = await User.create({
@@ -26,7 +27,6 @@ async function handleSignupPost(req,res){
     const user = await User.findOne({email:email})
     if(!user){
         // res.send(`<script>alert("You do not  have an account"); window.location.href="/user/login"</script>`);
-        // return;
         return res.status(500).json({message:"User does not exists"})
     }
     const isMatch = await bcrypt.compareSync(password,user.password);

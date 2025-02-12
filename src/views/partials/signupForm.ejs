@@ -1,24 +1,32 @@
-<div style="width: 30%; margin: auto; display: flex; flex-direction: column; justify-content: center; align-items: center; border:1px solid rgb(24, 61, 117); margin-top: 5%; padding: 2rem; border-radius: 1rem;" data-bs-theme="dark" >
-    <h1 style="padding-bottom: 2rem; color:blue" >Signup</h1>
-<form>
-    <div class="input-text mb-3">
-        <input type="text" id="name" class="form-control" placeholder="Enter your Name" name="name" aria-label="fullname" aria-describedby="inputGroup-sizing-default" required >
-      </div>
-    <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" required>
-      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-    </div>
-    <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Password</label>
-      <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
-    </div>
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; justify-content: center;" >
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="/user/login">Already have account?login here</a>
-    </div>
-
-   
-    
-</form>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card p-4" style="max-width: 400px; width: 100%; border: 1px solid rgb(24, 61, 117); border-radius: 1rem;" data-bs-theme="dark">
+      <h1 class="text-center text-primary mb-4">Signup</h1>
+      <form>
+          <div class="mb-3">
+              <input type="text" id="name" class="form-control" placeholder="Enter your Name" name="name" aria-label="fullname" required>
+          </div>
+          <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" name="email" required>
+              <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+          </div>
+          <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
+          </div>
+          <div class="d-flex flex-column align-items-center gap-2">
+              <button type="submit" class="btn btn-primary w-100">Submit</button>
+              <a href="/user/login">Already have an account? Login here</a>
+          </div>
+      </form>
+  </div>
 </div>
+
+<style>
+  @media (max-width: 576px) {
+      .card {
+          padding: 1.5rem;
+          border-radius: 0.75rem;
+      }
+  }
+</style>

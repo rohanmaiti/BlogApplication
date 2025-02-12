@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="">
+    <title>Homepage</title>
+    <!-- CDN header link for bootstrap -->
     <%- include("./partials/head")  %>
+      <!-- CDN script for bootstrap -->
+    <%- include("./partials/script") %>
+
     <style>
        /* SCROLLING FEATURE */
         .container {
@@ -36,7 +39,6 @@
             width: 100%;
             top: 0;
         }
-
         /*h5 is for author name*/
         h5{
             color:#f8e7a2;
@@ -109,17 +111,24 @@
         background-color: rgb(96, 96, 201);
         }
           /*comment section div / for cach comment START*/
+          .allCommentsDiv{
+            
+          }
         .commentParentContainer{
             display: flex;
             flex-direction: column;
             margin: 20px;
+            background-color: #282c33;
+            padding: 10px;
+            border-radius: 5px;
         }
         .commentCreator,.dateAndTime{
-            color:#555;
+            color:#727171;
             font-size: 0.7rem;
         }
         .commentHeader{
             display: flex;
+            flex-direction: row;
             gap: 5px;
         }
          /*comment section div / for cach comment ENDS*/
@@ -138,6 +147,7 @@
 
         /*SETTING DELETE ICON*/
         .deleteIcon{
+            padding-right: 30px;
             width: 2px;
         }
         .deleteImage{
@@ -154,15 +164,23 @@
     </style>
 </head>
 <body>
+    <!-- start navbar component of bootstrap -->
     <%- include("./partials/navbar") %>
 
+    <!-- start Div if there is no Blog present -->
         <div class="noBlog">
             <h1>There are zero Blogs !!</h1>
         </div>
+    <!-- end Div if there is no Blog present -->
+
+
+        <!-- start main container -->
         <div class="container"> </div>
-    <%- include("./partials/script") %>
+        <!-- emd main container -->
+
 
     <script>
+            // getting the user object
             const user = <%- JSON.stringify(user) %>; 
             // console.log("user =", user);
 
@@ -173,7 +191,12 @@
                 if(blogs.blogs.length == 0){
                     document.querySelector(".noBlog").style = "display:block;"
                 }
-                blogs.blogs.forEach(blog=>{
+                const array = blogs.blogs;
+                // console.log("after sort array = ", blogs.blogs);
+                array.sort((a, b)=> new Date(b.updatedAt)-new Date(a.updatedAt)); // sorting so that latest comes first
+                console.log("before sort array = ", array);
+                // console.log(array);
+                array.forEach(blog=>{
                     createBlogDiv(blog);
                 })
             })
@@ -235,6 +258,11 @@
             
             let div5 = document.createElement("div"); // for displaying all comments this is the father div
             div5.className = "comment";
+
+            let div6 = document.createElement("div"); // for all comments not for input tag
+            div6.className = "allCommentsDiv"
+
+
             const input = document.createElement("input"); // for taking comments from user
             input.setAttribute("type","text");
             input.setAttribute("name","comment");
@@ -247,7 +275,7 @@
                         name : user.name,
                         comment : e.target.value.trim(),
                         blog_id: blog._id,
-                        createdAt:getDateandTime(),
+                        createdat:getDateandTime(),
                         user_id : user._id
                     }
                     fetch("/user/blog/addComment",{
@@ -266,6 +294,8 @@
             })
             input.setAttribute("placeholder","write your comment");
             div5.append(input);
+            div5.append(div6);
+
 
             // HANDLING COMMENTS that will come from DB
             fetch(`/user/blog/getComments/?id=${blog._id}`)
@@ -273,19 +303,21 @@
             .then(comments=>{
                 // console.log("x",comments);
                 // working pending sort the comments on the order of latest first
-                comments.comments.forEach(cmt=>{
+                const array = comments.comments;
+                array.sort((a,b)=> new Date(a.createdAt) - new Date(b.createdAt));
+                array.forEach(cmt=>{
                 createCommentDiv(cmt);
                 })
-                div4.appendChild(div5);
+                div4.append(div5);
             })
 
             // creating div form each COMMENT
             function createCommentDiv(cmt){
-                let div = document.createElement("div");
+                let div = document.createElement("div"); // parent 
                 div.className = "commentParentContainer";
-                let div2 = document.createElement("div");
+                let div2 = document.createElement("div"); // for header part containing name and time
                 div2.className = "commentHeader"
-                let div3 = document.createElement("div");
+                let div3 = document.createElement("div"); // for body containing text and delete button
                 div3.className = "commentBody"
 
                 let span1 = document.createElement("span");
@@ -295,8 +327,7 @@
                 let span3 = document.createElement("span");
                 span3.className = "dateAndTime";
              
-                let span4 = document.createElement("span");
-
+                let span4 = document.createElement("span"); // for delete icon
                 // limiting delete button for current user 
                 if(cmt.user_id == user._id){
                 span4.className = "deleteIcon";
@@ -312,14 +343,14 @@
                 span4.append(img);
                 }
 
-                span3.innerHTML = cmt.createdAt;
+                span3.innerHTML = cmt.createdat;
                 span1.innerHTML = cmt.name;            
                 span2.innerHTML = cmt.comment;
 
                 div3.append(span2,span4);
                 div2.append(span1,span3)
                 div.append(div2, div3);
-                div5.append(div);
+                div6.prepend(div);
             }
 
            
@@ -368,7 +399,6 @@
                 },
                 body:JSON.stringify(obj)
                 })
-           
         }
 
        

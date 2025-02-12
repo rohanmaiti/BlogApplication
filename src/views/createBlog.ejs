@@ -4,8 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Blog</title>
+    <!-- CDN header linkfor bootstrap -->
     <%- include("./partials/head")  %>
+    <!-- CDN link for css of quill editor -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+     <!-- CDN script for sweetalert2 -->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <!-- CDN script for text editor quill -->
+     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+     <!-- CDN script for bootstrap -->
+     <%- include("./partials/script") %>
     <style>
         body{
             background: #393e51;  
@@ -55,9 +63,16 @@
         /*Editors styling Ends here*/
 
     </style>
+   
+
+
 </head>
 <body>
+    <!-- start navbar component of bootstrap -->
     <%- include("./partials/navbar") %>
+    <!-- end navbar component of bootstrap -->
+
+    <!-- start main container -->
     <div class="container">
         <div style="margin: 20px;;" >
             <h3>Create your Blog and share to the World !</h3>
@@ -72,13 +87,10 @@
             <div style="display:flex; justify-content: center; margin-top: 10px;" >
                 <button id="btn" type="button" class="btn btn-warning">Post your blog</button>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
         </div>
-        
     </div>
-   
-    <%- include("./partials/script") %>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- end main container -->
+
     <script>
         // Initialize Quill editor start here
         const quill = new Quill('#editor', {
@@ -91,23 +103,24 @@
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             ['clean']  // Remove formatting
         ]
-    }
+        }
         });
         // Initialize Quill editor ends here
 
+
+        // HANDLING CLICK FOR UPLOAD BLOG
         document.querySelector("#btn").addEventListener("click",()=>{
             const title = document.querySelector("#title").value.trim();
             // const text  = quill.getText();
             const text = quill.root.innerHTML.trim();
-            console.log("text = ",text);
+            // console.log("text = ",text);
             if(title == '' || text == '' || text=="<p>Write your Blog here...</p>"){
-                Swal.fire({
+                return Swal.fire({
                   title: 'warning!',
                   text: 'Title or Text is missing',
                   icon: 'warning',
                   confirmButtonText: 'got it'
-                })
-                return;
+                })     
             }
             else{
                 let blog = {
@@ -121,7 +134,14 @@
                     },
                     body:JSON.stringify(blog)
                 })
-                .then(res=>res.json())
+                .then(res=>{
+                    // although if server respont with status code 400/500 res will not go directly into catch block
+                    // that why checking like this below 
+                    if(!res.ok){    
+                        throw new Error("error")
+                    }
+                    return res.json()
+                })
                 .then(res=>{
                     Swal.fire({
                       title: `${res.message}`,
@@ -134,12 +154,12 @@
                 })
                 .catch(err=>{
                     console.log(err);
-                    Swal.fire({
+                    return Swal.fire({
                       title: "Error in Uploading Blog",
                       text: `something went wrong`,
                       icon: "error"
                     });
-                    return;
+                    
                 })
             }   
         })
