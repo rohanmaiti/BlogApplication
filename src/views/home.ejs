@@ -260,6 +260,7 @@
                     .then(res=>res.json())
                     .then(res=>{
                         createCommentDiv(res.cmt);
+                        input.value = "";
                     })
                 }
             })
@@ -366,9 +367,11 @@
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify(obj)
-            })
+                })
+           
         }
-        
+
+       
     </script>
 </body>
 </html>

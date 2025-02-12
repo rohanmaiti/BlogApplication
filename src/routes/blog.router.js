@@ -12,7 +12,8 @@ const {
     handleAddCommentPost,
     handleGetComments,
     handledeleteCommentPost,
-    handleDeleteBlog
+    handleDeleteBlog,
+    handleEditGet
      } = require("../controllers/blog.controller.js");
 
 router.get("/yourBlogs",userAuth,handleYourBlogsGet)
@@ -25,6 +26,7 @@ router.post("/createBlog",userAuth,handleCreateBlogPost);
 router.post("/updateBlog",userAuth,handleUpdateBlogPost);
 router.post("/addComment",userAuth,handleAddCommentPost);
 router.post("/deleteComment",userAuth,handledeleteCommentPost);
+router.get("/edit",userAuth,handleEditGet);
 
 
 router.delete("/deleteBlog",userAuth,handleDeleteBlog);

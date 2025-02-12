@@ -25,11 +25,27 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><button id="logoutBtn" class="dropdown-item" href="">Logout</button></li>
            
           </ul>
         </span>
+        
 
       </div>
     </div>
   </nav>
+
+  <script>
+     // FUNCTION FOR LOGOUT
+     document.querySelector("#logoutBtn").addEventListener("click",()=>{
+            fetch("/user/logout",{
+                method:"POST"
+            })
+            .then(res=>{
+                console.log(res);
+                if(res.redirected)
+                window.location.href = "/";
+            })
+        })
+        
+  </script>

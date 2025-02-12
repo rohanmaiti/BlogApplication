@@ -313,10 +313,19 @@
             
 
 
-
+            // delete post
             button4.addEventListener("click",()=>{
-                // delete post
                 const obj = {id:blog._id};
+                Swal.fire({
+              title: "Are you sure?",
+              text: "You won't be able to revert this!",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+              if (result.isConfirmed) {
                 fetch("/user/blog/deleteBlog",{
                     method:"DELETE",
                     headers:{
@@ -324,65 +333,89 @@
                     },
                     body:JSON.stringify(obj)
                 })
-                div4.remove();
+                .then((res)=>res.json())
+                .then(res=>{
+                  Swal.fire({
+                  title: "Deleted!",
+                  text: "Your blog has been deleted.",
+                  icon: "success"
+                });
+                div4.remove();  
+
+                })
+                .catch(err=>{
+                    Swal.fire({
+                    title: "Error Deleting blog!",
+                    text: "Your blog has not been deleted.",
+                    icon: "error"
+                    });
+                })
+               
+              }
+            });
+             
             })
 
+            // HANDLING EDIT BUTTON
             button3.addEventListener("click",async ()=>{
-                // console.log("ghgh")
-                const x = await Swal.fire({
-                  input: "textarea",
-                  inputLabel: "Message",
-                  inputPlaceholder: "Type your message here...",
-                  inputValue:p.innerText,
-                  inputAttributes: {
-                    "aria-label": "Type your message here"
-                  },
-                  showCancelButton: true,
-                  confirmButtonText: "Update",
-                  customClass: {
-                    input: "custom-textarea" // Apply custom class
-                  }
-                }).then(result=>{
-                    if(result.isConfirmed){
-                        if(p.innerText == result.value.trim()){
-                            Swal.fire({
-                              title: "Nothig to be updated",
-                              text: "add or detele text to update",
-                              icon: "question"
-                            });
-                            return;
-                        }
-                        // update the text
-                        // console.log("updated text", result.value);
-                        const updatedText = {
-                            text : result.value.trim(),
-                            id:blog._id
-                        }
-                        fetch("/user/blog/updateBlog",{
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body:JSON.stringify(updatedText)
-                        })
-                        .then(res=>{
-                            Swal.fire({
-                              title: "Successfully updated!",
-                              icon: "success",
-                              draggable: true
-                            }).then(()=>{
-                                p.innerText = result.value;
-                            })
-                        }).catch(err=>{
-                            Swal.fire({
-                              title: "Error in updating!",
-                              icon: "error",
-                              draggable: true
-                            });
-                        })
+                console.log("blog edit button clicked")
+                console.log(blog._id);
+                // const obj = {blog_id : blog._id};
+                window.location.href = (`/user/blog/edit?blog_id=${blog._id}`)
+                // const x = await Swal.fire({
+                //   input: "textarea",
+                //   inputLabel: "Message",
+                //   inputPlaceholder: "Type your message here...",
+                //   inputValue:p.innerText,
+                //   inputAttributes: {
+                //     "aria-label": "Type your message here"
+                //   },
+                //   showCancelButton: true,
+                //   confirmButtonText: "Update",
+                //   customClass: {
+                //     input: "custom-textarea" // Apply custom class
+                //   }
+                // }).then(result=>{
+                //     if(result.isConfirmed){
+                //         if(p.innerText == result.value.trim()){
+                //             Swal.fire({
+                //               title: "Nothig to be updated",
+                //               text: "add or detele text to update",
+                //               icon: "question"
+                //             });
+                //             return;
+                //         }
+                //         // update the text
+                //         // console.log("updated text", result.value);
+                //         const updatedText = {
+                //             text : result.value.trim(),
+                //             id:blog._id
+                //         }
+                //         fetch("/user/blog/updateBlog",{
+                //             method:"POST",
+                //             headers:{
+                //                 "Content-Type":"application/json"
+                //             },
+                //             body:JSON.stringify(updatedText)
+                //         })
+                //         .then(res=>{
+                //             Swal.fire({
+                //               title: "Successfully updated!",
+                //               icon: "success",
+                //               draggable: true
+                //             }).then(()=>{
+                //                 p.innerText = result.value;
+                //             })
+                //         }).catch(err=>{
+                //             Swal.fire({
+                //               title: "Error in updating!",
+                //               icon: "error",
+                //               draggable: true
+                //             });
+                //         })
                         
-                    }
-                })
+                //     }
+                // })
             })
 
         }

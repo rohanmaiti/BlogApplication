@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Blog</title>
+    <%- include("./partials/head")  %>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <style>
+        body{
+            background: #393e51;  
+            color: rgb(149, 146, 146);
+        }
+        .form-control::placeholder {
+            color: grey !important;
+        }
+
+        /*Editors styling Start here*/
+        #editor {
+        height: 400px; /* Change this value as needed */
+        /* border: 1px solid black; */
+        }
+        .ql-container {
+        min-height: 400px; /* Ensures the editor body is tall */
+        /* border: 1px solid black; */
+        }
+        .ql-editor { 
+        font-family: "Arial", sans-serif;
+        font-size: 18px;
+        color: #ffffff;  /* Text color */
+        background: #1e1e1e; /* Dark mode */
+        padding: 15px; /* Add spacing inside */
+        border-radius: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        }
+        .ql-toolbar button{
+        font-size: 16px;  /* Increase icon size */
+        color: #ffffff;  /* Change color */
+        }
+        .ql-toolbar button:hover {
+        color: #ff914d; /* Change hover color */
+        }
+        .ql-toolbar {
+        border: none;
+        background: #808592;
+        }
+        .ql-editor ::selection {
+        background: #ff914d;
+        color: #fff;
+        }
+        .ql-editor:focus {
+        outline: none;
+        }
+        /*Editors styling Ends here*/
+
+    </style>
+</head>
+<body>
+    <%- include("./partials/navbar") %>
+    <div class="container">
+        <div style="margin: 20px;;" >
+            <h3>Edit Your Blog</h3>
+        </div>
+        <div style="margin: 20px;;" class="mb-3">
+            <input type="text" class="form-control bg-dark text-white p-3" value="<%-blog.title%>" disabled id="title" placeholder="Enter the Title">
+        </div>
+        <div style="margin: 20px;;" class="form-floating" data-bs-theme="dark">
+            <div id="editor">
+                <%- blog.text %>
+            </div>
+            <div style="display:flex; justify-content: center; margin-top: 10px;" >
+                <button id="btn" type="button" class="btn btn-warning">Update</button>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+        </div>
+        
+    </div>
+   
+    <%- include("./partials/script") %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Initialize Quill editor start here
+        const blog = <%-JSON.stringify(blog)%>
+        const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+        toolbar: [
+            [{ 'color': [] }, { 'background': [] }], // Enable text & background color
+            ['bold', 'italic', 'underline'],  // Other basic text styles
+            [{ 'header': [1, 2, false] }],    // Header options
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['clean']  // Remove formatting
+        ]
+    }
+        });
+        // Initialize Quill editor ends here
+
+        document.querySelector("#btn").addEventListener("click",()=>{
+            // const title = document.querySelector("#title").value.trim();
+            // const text  = quill.getText();
+            const text = quill.root.innerHTML.trim();
+            console.log("text = ",text);
+            console.log("blog.text = ",blog.text);
+            console.log(blog._id);
+            // if previous text matched then do not update it 
+            if(text == "" || text == blog.text.trim() ){
+                Swal.fire({
+                  title: 'warning!',
+                  text: 'Edit something to Update',
+                  icon: 'warning',
+                  confirmButtonText: 'got it'
+                })
+                return;
+            }
+            else{
+                let updatedText = {
+                    text : text,
+                    id:blog._id
+                }
+                fetch("/user/blog/updateBlog",{
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify(updatedText)
+                })
+                .then(res=>res.json())
+                .then(res=>{
+                    Swal.fire({
+                    title: "Successfully updated!",
+                    icon: "success",
+                    draggable: true
+                    })
+                    blog.text = updatedText.text;
+
+                    return;
+                })
+                .catch(err=>{
+                    console.log(err);
+                    Swal.fire({
+                      title: "Error in Uploading Blog",
+                      text: `something went wrong`,
+                      icon: "error"
+                    });
+                    return;
+                })
+            }   
+        })
+    </script>
+</body>
+</html>

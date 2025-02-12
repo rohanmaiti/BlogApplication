@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <%- include("./partials/head") %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
        body{
         background-color:rgb(31, 31, 33) ;
@@ -16,5 +18,64 @@
     <%- include("./partials/loginForm") %>
     
     <%- include("./partials/script") %>
+
+    <script>
+        document.querySelector("form").addEventListener("submit",(e)=>{
+          e.preventDefault();
+        //   console.log("submit signup")
+          const obj = {
+            email:document.querySelector("#exampleInputEmail1").value.trim(),
+            password:document.querySelector("#exampleInputPassword1").value.trim(),
+          }
+
+          fetch("/user/login",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify(obj)
+          })
+          .then((res)=>{
+            
+            if (!res.ok) {
+                throw new Error(`${res.messages}`);
+            }
+            if(res.redirected){
+              const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 1000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "success",
+              title: "login in successfull"
+            });
+            
+            setTimeout(()=>{
+                window.location.href = "/home"
+            },1000)
+            }
+            // res.json()
+          })
+          .then(res=>{
+            // console.log("res",res);
+          })
+          .catch((err)=>{
+          console.log("err",err);
+          Swal.fire({
+              title: "Credential does not matched",
+              icon: "error",
+              draggable: true
+          });
+          })
+    })
+       
+      </script>
 </body>
 </html>

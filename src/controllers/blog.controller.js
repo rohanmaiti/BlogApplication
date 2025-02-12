@@ -89,6 +89,26 @@ async function handledeleteCommentPost(req,res){
     res.status(200).json({message:"Comment Deleted"});
 }
 
+async function handleEditGet(req,res){
+    console.log(req.query);
+    try {
+        console.log("hii");
+        const { blog_id } = req.query;
+        console.log(blog_id);
+        const blog = await Blog.findOne({ _id: blog_id });
+        if (!blog) {
+            return res.status(404).send("Blog not found");
+        }
+        console.log("blog", blog);
+        res.render("edit", {user:req.session.user , blog:blog });  // Pass data to template
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+}
+
+
+
 
 
 
@@ -102,5 +122,6 @@ module.exports = {
     handleAddCommentPost,
     handleGetComments,
     handledeleteCommentPost,
-    handleDeleteBlog
+    handleDeleteBlog,
+    handleEditGet
 }

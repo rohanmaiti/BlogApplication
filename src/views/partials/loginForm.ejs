@@ -1,6 +1,6 @@
 <div style="width: 60vh; margin: auto; display: flex; flex-direction: column; justify-content: center; align-items: center; border:1px solid rgb(24, 61, 117); margin-top: 5%; padding: 2rem; border-radius: 1rem;" data-bs-theme="dark" >
     <h1 style="padding-bottom: 2rem; color:blue" >Login</h1>
-<form method="post"  action="/user/login">
+<form>
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Email address</label>
       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" required>
@@ -10,8 +10,12 @@
       <label for="exampleInputPassword1" class="form-label">Password</label>
       <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
     </div>
-    <div style="display: flex; justify-content: center;" >
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; justify-content: center;" >
         <button type="submit" class="btn btn-primary" >Login</button>
+        <a href="/user/signup">Do not have account?create here</a>
+    </div>
+    <div>
+     
     </div>
     
 </form>
