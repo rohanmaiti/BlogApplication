@@ -242,7 +242,7 @@
             // HANDLING ON ENTER CLICK IN INPUT
             input.addEventListener("keypress",(e)=>{
                 // console.log("user = ",user);
-                if(e.key == "Enter"){ // login of commnet going to db and displayed
+                if(e.key == "Enter" && input.value.trim() != ""){ // login of commnet going to db and displayed
                     let comment = {
                         name : user.name,
                         comment : e.target.value.trim(),
