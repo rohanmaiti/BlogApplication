@@ -7,6 +7,8 @@
     <%- include("./partials/head") %>
     <%- include("./partials/script") %>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- this is for loading animation in button -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
        body{
         background-color:rgb(31, 31, 33) ;
@@ -24,6 +26,9 @@
         document.querySelector("form").addEventListener("submit",(e)=>{
           e.preventDefault();
         //   console.log("submit signup")
+
+          // adding animation for loading in button
+          document.querySelector("button").innerHTML = `<i class="fa fa-spinner fa-spin"></i>Loading`
           const obj = {
             name:document.querySelector("#name").value.trim(),
             email:document.querySelector("#exampleInputEmail1").value.trim(),
@@ -79,6 +84,9 @@
             showConfirmButton: false,
             timer: 2000
           });
+          })
+          .finally(()=>{
+          document.querySelector("button").innerText = "Signup";
           })
     })
        

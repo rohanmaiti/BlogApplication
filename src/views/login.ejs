@@ -10,6 +10,7 @@
     <%- include("./partials/script") %>
      <!-- CDN script for sweetalert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
        body{
@@ -25,9 +26,12 @@
     
 
     <script>
-       // handling on clicking login button
-        document.querySelector("form").addEventListener("submit",(e)=>{
+          // handling on clicking login button
+          document.querySelector("form").addEventListener("submit",(e)=>{
           e.preventDefault();
+      
+          // adding animation for loading in button
+          document.querySelector("button").innerHTML = `<i class="fa fa-spinner fa-spin"></i>Loading`
           const obj = {
             email:document.querySelector("#exampleInputEmail1").value.trim(),
             password:document.querySelector("#exampleInputPassword1").value.trim(),
@@ -79,6 +83,9 @@
               icon: "error",
               draggable: true
             });
+          })
+          .finally(()=>{
+          document.querySelector("button").innerText = "Login";
           })
     })
        
